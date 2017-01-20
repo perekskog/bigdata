@@ -124,11 +124,50 @@ def fetch_items_filelist(filein):
     with open(filein, 'r', encoding='utf-8') as f:
         for row in f:
 
-            print(">"+row.strip("\n)"))
+            print("\n>"+row.strip("\n)"))
 
             # Strip off pathname component(s)
+            filecomponents = row.strip("\n").split("/")
+            filename = filecomponents[len(filecomponents)-1]
+            print("filename={}".format(filename))
+
+            # Skip files with inbedded "."
+            filecomps = filename.split(".")
+            if len(filecomps) != 2:
+                print("ERROR: filename not a file.extension: {}".format(filename))
+                continue
+
+            # Skip subtitles
+            basename = filecomps[0]
+            filetype = filecomps[1]
+            if filetype == "sub" or filetype == "idx":
+                print("SKIP subtitle: {}".format(filetype))
+                continue
+
             # Split at "(":
+            attr = basename.split("(")
+
+            # Extract moviename
+            if attr[0] == "":
+                print("ERROR: No movietitle")
+                continue
+
+            title = attr[0]
+            attr.remove(0)
+
+            disk = "ms"
+
+            productionyear = 0
+            for i in attr:
+                print("attribute={}".format(i))
+                i = i.strip(")")
+                if len(i) == 0:
+                    continue
+
             #   If a number => productionyear
+                if(i.isdigit()):
+                    productionyear = int(i)
+
             #   If "copy" => copy
             #   Else language:
             #       Split at ","
