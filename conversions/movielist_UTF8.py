@@ -24,9 +24,9 @@ def character(c):
 def main(filein, fileout):
     fout = open(fileout, mode="w")
     with open(filein, mode="rb") as fin:
-        for ch in iter(lambda: fin.read(1), ''):
-            if len(ch) == 1:
-                fout.write(character(ch))
+        for char in iter(lambda: fin.read(1), ''):
+            if len(char) == 1:
+                fout.write(character(char))
             else:
                 break
 
