@@ -11,6 +11,8 @@ Args:
         filelist    File with list of pathnames
         directory   Directory
         recursive   Directory, will traverse into subdirectories
+    inoutfile:  Source data
+    outputfile: JSON result
 """
 
 import sys
