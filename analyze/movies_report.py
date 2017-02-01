@@ -53,7 +53,7 @@ def main(store, report):
     sorted_titles = sorted(titles)
     for title in sorted_titles:
         movie_data = movies[title]
-        print("{}\t{}".format(title, movie_data["media_location"]))
+        print("{}\t{}".format(movie_data["media_location"], title))
 
 
 if __name__ == '__main__':

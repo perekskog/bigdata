@@ -99,6 +99,7 @@ def fetch_items_movielist(filein):
                     onmediaserver = True
                 if i.find("/") >= 0:
                     comment = i.strip("/")
+
             print("\tmedia=[{}], spoken=[{}], subtitle=[{}], cat={}, ms=[{}], comment=[{}]".format(
                 media, language_spoken, language_subtitle, category, onmediaserver, comment))
 
