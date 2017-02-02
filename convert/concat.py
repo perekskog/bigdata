@@ -13,6 +13,7 @@ Args:
 
 import sys
 import json
+from datetime import datetime
 
 
 def datetime_parser(json_dict):
@@ -27,7 +28,7 @@ def datetime_parser(json_dict):
 def main(filein1, filein2, fileout):
     items1 = json.load(open(filein1, 'r', encoding="utf-8"), object_hook=datetime_parser)
     items2 = json.load(open(filein2, 'r', encoding="utf-8"), object_hook=datetime_parser)
-    item = item1 + items2
+    items = items1 + items2
     open(fileout, 'wb').write(json.dumps(items, sort_keys=False, indent=4, ensure_ascii=False)
                               .encode('utf8'))
 
