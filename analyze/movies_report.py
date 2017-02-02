@@ -11,6 +11,7 @@ Args:
         movielist   Alphabetical list of movies
 
 """
+
 import sys
 import json
 import functools
@@ -38,7 +39,8 @@ def date_handler(obj):
 def movielist(store):
     movies = dict()
     for movie in store:
-        m = {"media_location": movie["media_location"]}
+        m = {"media-location": movie["media-location"],
+             "media-format": movie["media-format"]}
         movies[movie["title"]] = m
     return movies
 
@@ -53,7 +55,7 @@ def main(store, report):
     sorted_titles = sorted(titles)
     for title in sorted_titles:
         movie_data = movies[title]
-        print("{}\t{}".format(movie_data["media_location"], title))
+        print("{}\t{}\t{}".format(movie_data["media-location"], title, movie_data["media-format"]))
 
 
 if __name__ == '__main__':

@@ -26,7 +26,7 @@ def fetch_items_movielist(filein):
 
     file = [ comment | movie ]*
     comment = # string
-    movie = disk TAB title_with_attributes
+    movie = media_location TAB title_with_attributes
     title_with_attributes =  title TAB attributes
     attributes = *format | COMMA § category | COMMA # language | COMMA & on_mediaserver
     title = string [string SPACE]*
@@ -55,19 +55,20 @@ def fetch_items_movielist(filein):
 
             print(">" + row.strip("\n)"))
 
-            # disk, title, attributes
+            # media_location, title, attributes
             tokens = row.split("\t")
-            disk = ""
+            media_location = ""
+            media_type = "---"
             title = ""
             attributes = ""
             if len(tokens) >= 1:
-                disk = tokens[0].strip("\n")
+                media_location = tokens[0].strip("\n")
             if len(tokens) >= 2:
                 title = tokens[1].strip("\n")
             if len(tokens) >= 3:
                 attributes = tokens[2].strip("\n")
-            print("disk=[{}], title=[{}], attributes=[{}]".format(
-                disk, title, attributes))
+            print("media_location=[{}], title=[{}], attributes=[{}]".format(
+                media_location, title, attributes))
 
             # attributes
             attr = attributes.split(",")
@@ -103,9 +104,10 @@ def fetch_items_movielist(filein):
             print("\tmedia=[{}], spoken=[{}], subtitle=[{}], cat={}, ms=[{}], comment=[{}]".format(
                 media, language_spoken, language_subtitle, category, onmediaserver, comment))
 
-            movie = {"title": title, "media_location": disk, "media_type": media,
-                     "audio": language_spoken, "subtitle": language_subtitle, "category": category,
-                     "mediaserver": onmediaserver, "comment": comment}
+            movie = {"title": title, "media-location": media_location,
+                     "media-type": media_type, "media-format": media,
+                     "audio": language_spoken, "subtitle": language_subtitle,
+                     "category": category, "comment": comment}
 
 
             movies.append(movie)
@@ -153,7 +155,7 @@ def get_movie_from_row(row):
 
     # Default values
     title = ""
-    disk = "ms"
+    media_location = "ms"
     copy = False
     productionyear = 0
     audio = ""
@@ -215,12 +217,13 @@ def get_movie_from_row(row):
             else:
                 subtitle = lang[1]
 
-    print("\ttitle={}, filetype={}, disk={}, copy={}, productionyear={}, audio={}, subtitle={}"
-          .format(title, filetype, disk, copy, productionyear, audio, subtitle))
+    print("\ttitle={}, filetype={}, media_location={}, copy={}, productionyear={}, audio={}, subtitle={}"
+          .format(title, filetype, media_location, copy, productionyear, audio, subtitle))
 
-    movie = {"title": title, "media_location": disk, "media_type": filetype,
+    movie = {"title": title, "media-location": media_location,
+             "media-type": "file", "media-format": filetype,
              "audio": audio, "subtitle": subtitle,
-             "mediaserver": True, "is_copy": copy, "production_year": productionyear}
+             "production-year": productionyear}
 
     return movie
 
