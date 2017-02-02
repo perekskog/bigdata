@@ -84,21 +84,21 @@ def fetch_items_movielist(filein):
             comment = ""
             for i in attr:
                 # print("<<{}>>".format(i))
-                i = i.strip(" ").strip("\n")
+                i = i.strip(" \n")
                 if len(i) == 0:
                     continue
-                if i.find("*") >= 0:
+                if i.find("*") == 0:
                     media = i.strip("*")
-                if i.find("#") >= 0:
+                if i.find("#") == 0:
                     languages = i.strip("#").split("/")
                     language_spoken = languages[0]
                     if len(languages) >= 2:
                         language_subtitle = languages[1]
-                if i.find("§") >= 0:
+                if i.find("§") == 0:
                     category.append(i.strip("§"))
-                if i.find("&ms") >= 0:
+                if i.find("&ms") == 0:
                     onmediaserver = True
-                if i.find("/") >= 0:
+                if i.find("/") == 0:
                     comment = i.strip("/")
 
             print("\tmedia=[{}], spoken=[{}], subtitle=[{}], cat={}, ms=[{}], comment=[{}]".format(
