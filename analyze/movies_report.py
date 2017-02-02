@@ -40,7 +40,8 @@ def movielist(store):
     movies = dict()
     for movie in store:
         m = {"media-location": movie["media-location"],
-             "media-format": movie["media-format"]}
+             "media-format": movie["media-format"],
+             "media-type": movie["media-type"]}
         movies[movie["title"]] = m
     return movies
 
@@ -55,7 +56,7 @@ def main(store, report):
     sorted_titles = sorted(titles)
     for title in sorted_titles:
         movie_data = movies[title]
-        print("{}\t{}\t{}".format(movie_data["media-location"], title, movie_data["media-format"]))
+        print("{}\t{}\t{}/{}".format(movie_data["media-location"], title, movie_data["media-type"], movie_data["media-format"]))
 
 
 if __name__ == '__main__':

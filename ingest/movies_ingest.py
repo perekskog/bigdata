@@ -58,7 +58,7 @@ def fetch_items_movielist(filein):
             # media_location, title, attributes
             tokens = row.split("\t")
             media_location = ""
-            media_type = "---"
+            media_type = "disc"
             title = ""
             attributes = ""
             if len(tokens) >= 1:
