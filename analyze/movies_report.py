@@ -39,6 +39,11 @@ def date_handler(obj):
 def movielist(store):
     movies = list()
     for movie in store:
+        # Add default values
+        if not "production-year" in movie:
+            movie["production-year"] = -1
+        if not "comment" in movie:
+            movie["comment"] = ""
         m = {"media-title": movie["title"],
              "media-location": movie["media-location"],
              "media-type": movie["media-type"],
@@ -62,12 +67,19 @@ def main(store, report):
 
     movies.sort(key=lambda movie: movie["media-title"])
     for movie in movies:
-        print("{}\t{} ({})\t{}/{}".
-              format(movie["media-location"],
-                     movie["media-title"],
-                     movie["media-production-year"],
-                     movie["media-type"],
-                     movie["media-format"]))
+        if movie["media-production-year"] == -1:
+            print("{}\t{}\t{}/{}".
+                format(movie["media-location"],
+                        movie["media-title"],
+                        movie["media-type"],
+                        movie["media-format"]))
+        else:
+            print("{}\t{} ({})\t{}/{}".
+                format(movie["media-location"],
+                        movie["media-title"],
+                        movie["media-production-year"],
+                        movie["media-type"],
+                        movie["media-format"]))
 
 
 if __name__ == '__main__':
