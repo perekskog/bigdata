@@ -37,12 +37,20 @@ def date_handler(obj):
 
 
 def movielist(store):
-    movies = dict()
+    movies = list()
     for movie in store:
-        m = {"media-location": movie["media-location"],
+        m = {"media-title": movie["title"],
+             "media-location": movie["media-location"],
+             "media-type": movie["media-type"],
              "media-format": movie["media-format"],
-             "media-type": movie["media-type"]}
-        movies[movie["title"]] = m
+             "media-audio": movie["audio"],
+             "media-subtitle": movie["subtitle"],
+             "media-comment": movie["comment"],
+             "media-production-year": movie["production-year"]}
+        # if movie["title"] in movies:
+        #     print("{} already exists, skipping this one.".format(movie["title"]))
+        #     continue
+        movies.append(m)
     return movies
 
 
@@ -52,11 +60,14 @@ def main(store, report):
     if report == "movielist":
         movies = movielist(items)
 
-    titles = movies.keys()
-    sorted_titles = sorted(titles)
-    for title in sorted_titles:
-        movie_data = movies[title]
-        print("{}\t{}\t{}/{}".format(movie_data["media-location"], title, movie_data["media-type"], movie_data["media-format"]))
+    movies.sort(key=lambda movie: movie["media-title"])
+    for movie in movies:
+        print("{}\t{} ({})\t{}/{}".
+              format(movie["media-location"],
+                     movie["media-title"],
+                     movie["media-production-year"],
+                     movie["media-type"],
+                     movie["media-format"]))
 
 
 if __name__ == '__main__':

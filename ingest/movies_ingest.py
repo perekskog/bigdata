@@ -65,6 +65,8 @@ def fetch_items_movielist(filein):
                 media_location = tokens[0].strip("\n")
             if len(tokens) >= 2:
                 title = tokens[1].strip("\n")
+                # If title comntains (NUM):
+                #     extract production-year from NUM
             if len(tokens) >= 3:
                 attributes = tokens[2].strip("\n")
             print("media_location=[{}], title=[{}], attributes=[{}]".format(
@@ -107,7 +109,8 @@ def fetch_items_movielist(filein):
             movie = {"title": title, "media-location": media_location,
                      "media-type": media_type, "media-format": media,
                      "audio": language_spoken, "subtitle": language_subtitle,
-                     "category": category, "comment": comment}
+                     "category": category, "comment": comment,
+                     "production-year": -1}
 
 
             movies.append(movie)
