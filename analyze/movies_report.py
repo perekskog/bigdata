@@ -65,19 +65,23 @@ def main(store, report):
     if report == "movielist":
         movies = movielist(items)
 
-    movies.sort(key=lambda movie: movie["media-title"])
+    movies.sort(key=lambda movie: "{} {}".format(movie["media-title"], movie["media-production-year"]))
     for movie in movies:
         if movie["media-production-year"] == -1:
-            print("{}\t{}\t{}/{}".
+            print("{}\t{}\t{}/{}\t{}/{}".
                 format(movie["media-location"],
                         movie["media-title"],
+                        movie["media-audio"],
+                        movie["media-subtitle"],
                         movie["media-type"],
                         movie["media-format"]))
         else:
-            print("{}\t{} ({})\t{}/{}".
+            print("{}\t{} ({})\t{}/{}\t{}{}".
                 format(movie["media-location"],
                         movie["media-title"],
                         movie["media-production-year"],
+                        movie["media-audio"],
+                        movie["media-subtitle"],
                         movie["media-type"],
                         movie["media-format"]))
 

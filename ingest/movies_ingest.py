@@ -61,16 +61,25 @@ def fetch_items_movielist(filein):
             media_type = "disc"
             title = ""
             attributes = ""
+            production_year = -1
             if len(tokens) >= 1:
                 media_location = tokens[0].strip("\n")
             if len(tokens) >= 2:
                 title = tokens[1].strip("\n")
-                # If title comntains (NUM):
-                #     extract production-year from NUM
+                title_parts = title.split("(")
+                if len(title_parts) == 2:
+                    title = title_parts[0].strip()
+                    production_year = title_parts[1].split(")")[0]
+                    if production_year.find("/") >= 0:
+                        print("Error: Illegal production year in {}".format(row))
+                        continue
+                elif len(title_parts) > 2:
+                    print("Error: Too many title parts in {}".format(row))
+                    continue
             if len(tokens) >= 3:
                 attributes = tokens[2].strip("\n")
-            print("media_location=[{}], title=[{}], attributes=[{}]".format(
-                media_location, title, attributes))
+            print("media_location=[{}], title=[{}], production_year={}, attributes=[{}]".format(
+                media_location, title, production_year, attributes))
 
             # attributes
             attr = attributes.split(",")
@@ -110,7 +119,7 @@ def fetch_items_movielist(filein):
                      "media-type": media_type, "media-format": media,
                      "audio": language_spoken, "subtitle": language_subtitle,
                      "category": category, "comment": comment,
-                     "production-year": -1}
+                     "production-year": production_year}
 
 
             movies.append(movie)
