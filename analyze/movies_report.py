@@ -76,7 +76,7 @@ def main(store, report):
                         movie["media-type"],
                         movie["media-format"]))
         else:
-            print("{}\t{} ({})\t{}/{}\t{}{}".
+            print("{}\t{} ({})\t{}/{}\t{}/{}".
                 format(movie["media-location"],
                         movie["media-title"],
                         movie["media-production-year"],
