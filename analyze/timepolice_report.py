@@ -38,7 +38,7 @@ def date_handler(obj):
 
 
 def session_between_dates(session, projectname, startdate, enddate):
-    if session['projectname']==projectname and session['date_created'].date().toordinal() >= startdate and session['date_created'].date().toordinal() <= enddate:
+    if session['projectname'] == projectname and session['date_created'].date().toordinal() >= startdate and session['date_created'].date().toordinal() <= enddate:
         return True
     else:
         return False
@@ -57,21 +57,38 @@ def add_task(summary, name, time):
 def session_summary(session):
 #    task_summary = { t['taskname']: timedelta(0) for t in session['taskentries'] }
     summary = dict()
+    version_170213 = date(2017, 2, 13).toordinal()
+
     for taskentry in session['taskentries']:
         name = taskentry['taskname']
         totaltime = taskentry['stop']-taskentry['start']
-        if name=="STOD dok (???)":
-            add_task(summary, "STOD Vz", totaltime*2/3)
-            add_task(summary, "CMCC 9480 4018", totaltime/3)
+        # if date is <= 170212
+        if taskentry['start'].toordinal() <= version_170213:
+            if name == "STOD dok (???)":
+                add_task(summary, "STOD Vz", totaltime*2/3)
+                add_task(summary, "CMCC 9480 4018", totaltime/3)
+            else:
+                add_task(summary, name, totaltime)
+        # if date >= 170213
         else:
-            add_task(summary, name, totaltime)
+            if name == "STOD dok":
+                add_task(summary, "STOD Vz", totaltime*2/3)
+                add_task(summary, "CMCC 9480 4018", totaltime/3)
+            elif name == "ACoS misc":
+                add_task(summary, "TR CSR", totaltime*0.15)
+                add_task(summary, "TR TTX", totaltime*0.15)
+                add_task(summary, "DFU", totaltime*0.7)
+            else:
+                add_task(summary, name, totaltime)
+        #    "STOD dok"  => ...
+        #    "ACoS misc" => ...
     return summary
 
 
 def timesheet(store, first_date, last_date):
     first = datetime.strptime(first_date, "%y-%m-%d").date().toordinal()
     last = datetime.strptime(last_date, "%y-%m-%d").date().toordinal()
-    subset_kostnad = [ s for s in store if session_between_dates(s, "Kostnad", first, last)]
+    subset_kostnad = [s for s in store if session_between_dates(s, "Kostnad", first, last)]
 
     tasknames = set()
     for session in subset_kostnad:
@@ -79,15 +96,15 @@ def timesheet(store, first_date, last_date):
         print(session['date_created'].date())
         for task in summary:
             print(task, round(summary[task].seconds/3600, 2))
-        totals = [s for s in summary.values() ]
-        total = functools.reduce(lambda x,y: x+y, totals)
+        totals = [s for s in summary.values()]
+        total = functools.reduce(lambda x, y: x+y, totals)
         print(round(total.seconds/3600, 2))
         print()
 
 
 def main(store, report, first_date, last_date):
     items = json.load(open(store, 'r', encoding="utf-8"), object_hook=datetime_parser)
-    if report=="timesheet":
+    if report == "timesheet":
         timesheet(items, first_date, last_date)
 
 
