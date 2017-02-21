@@ -62,7 +62,7 @@ def session_summary(session):
     for taskentry in session['taskentries']:
         name = taskentry['taskname']
         totaltime = taskentry['stop']-taskentry['start']
-        # if date is <= 170212
+        # if date is < 170213
         if taskentry['start'].toordinal() <= version_170213:
             if name == "STOD dok (???)":
                 add_task(summary, "STOD Vz", totaltime*2/3)
@@ -72,12 +72,12 @@ def session_summary(session):
         # if date >= 170213
         else:
             if name == "STOD dok":
-                add_task(summary, "STOD Vz", totaltime*2/3)
-                add_task(summary, "CMCC 9480 4018", totaltime/3)
+                add_task(summary, "STOD Vz 7483", totaltime*2/3)
+                add_task(summary, "CMCC 4018", totaltime/3)
             elif name == "ACoS misc":
-                add_task(summary, "TR CSR", totaltime*0.15)
-                add_task(summary, "TR TTX", totaltime*0.15)
-                add_task(summary, "DFU", totaltime*0.7)
+                add_task(summary, "TR CSR (m) 6718", totaltime*0.15)
+                add_task(summary, "TR TTX (a) 9342", totaltime*0.15)
+                add_task(summary, "DFU 2672", totaltime*0.7)
             else:
                 add_task(summary, name, totaltime)
         #    "STOD dok"  => ...
