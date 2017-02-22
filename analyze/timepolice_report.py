@@ -57,7 +57,7 @@ def add_task(summary, name, time):
 def session_summary(session):
 #    task_summary = { t['taskname']: timedelta(0) for t in session['taskentries'] }
     summary = dict()
-    version_170213 = date(2017, 2, 13).toordinal()
+    version_170213 = date(2017, 2, 12).toordinal()
 
     for taskentry in session['taskentries']:
         name = taskentry['taskname']
