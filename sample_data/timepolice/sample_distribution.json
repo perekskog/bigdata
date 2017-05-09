@@ -1,0 +1,19 @@
+[
+    {"start_date": "2010-01-01T00:00:00", "distribution": [
+        {"origin_task": "STOD dok (???)", "distribute_as": [
+            {"new_task": "STOD Vz", "new_amount": 0.67},
+            {"new_task": "CMCC 9480 4018", "new_amount": 0.33}
+        ]}
+    ]},
+    {"start_date": "2014-02-13T00:00:00", "distribution": [
+        {"origin_task": "STOD dok (???)", "distribute_as": [
+            {"new_task": "STOD Vz 7483", "new_amount": 0.67},
+            {"new_task": "CMCC 4018", "new_amount": 0.33}
+        ]},
+        {"origin_task": "ACoS misc", "distribute_as": [
+            {"new_task": "TR CSR (m) 6718", "new_amount": 0.15},
+            {"new_task": "TR TTX (a) 9342", "new_amount": 0.15},
+            {"new_task": "DFU 2672", "new_amount": 0.7}
+        ]}
+    ]}
+]
