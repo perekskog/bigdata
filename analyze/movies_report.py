@@ -3,7 +3,7 @@
 
 Usage:
 
-    movies_report store report
+    movies_report store report subset
 
 Args:
     store   JSON file with movie data
@@ -44,6 +44,8 @@ def movielist(store):
             movie["production-year"] = -1
         if not "comment" in movie:
             movie["comment"] = ""
+        if not "category" in movie:
+            movie["category"] = ["-"]
         m = {"media-title": movie["title"],
              "media-location": movie["media-location"],
              "media-type": movie["media-type"],
@@ -51,7 +53,8 @@ def movielist(store):
              "media-audio": movie["audio"],
              "media-subtitle": movie["subtitle"],
              "media-comment": movie["comment"],
-             "media-production-year": movie["production-year"]}
+             "media-production-year": movie["production-year"],
+             "media-category": movie["category"]}
         # if movie["title"] in movies:
         #     print("{} already exists, skipping this one.".format(movie["title"]))
         #     continue
@@ -59,7 +62,7 @@ def movielist(store):
     return movies
 
 
-def main(store, report):
+def main(store, report, subset):
     items = json.load(open(store, 'r', encoding="utf-8"), object_hook=datetime_parser)
     movies = list()
     if report == "movielist":
@@ -68,26 +71,28 @@ def main(store, report):
     movies.sort(key=lambda movie: "{} {}".format(movie["media-title"], movie["media-production-year"]))
     for movie in movies:
         if movie["media-production-year"] == -1:
-            print("{}\t{}\t{}/{}\t{}/{}".
+            print("{}\t{}\t{}/{}\t{}/{}\t{}".
                 format(movie["media-location"],
                         movie["media-title"],
                         movie["media-audio"],
                         movie["media-subtitle"],
                         movie["media-type"],
-                        movie["media-format"]))
+                        movie["media-format"],
+                        movie["media-category"]))
         else:
-            print("{}\t{} ({})\t{}/{}\t{}/{}".
+            print("{}\t{} ({})\t{}/{}\t{}/{}\t{}".
                 format(movie["media-location"],
                         movie["media-title"],
                         movie["media-production-year"],
                         movie["media-audio"],
                         movie["media-subtitle"],
                         movie["media-type"],
-                        movie["media-format"]))
+                        movie["media-format"],
+                        movie["media-category"]))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
-        main(sys.argv[1], sys.argv[2])
+    if len(sys.argv) == 4:
+        main(sys.argv[1], sys.argv[2], sys.argv[3])
     else:
         print("{}".format(__doc__))
