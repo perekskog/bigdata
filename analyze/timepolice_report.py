@@ -1,19 +1,6 @@
 #!/usr/bin/env python3
-""" Extract information from timepolice data
 
-Usage:
-
-    timepolice_report store report firstdata lastdate distribution
-
-Args:
-    store   JSON file with timepolice data
-    report
-        timesheet   Summary of sessions of type "Kostnad"
-    firstdata   First date to include, yy-mm-dd
-    lastdate    Last date to include, yy-mm-dd
-    distribution    JSON file defining how tasks should be distributed
-
-"""
+import argparse
 import sys
 import json
 import functools
@@ -95,17 +82,28 @@ def timesheet(store, first_date, last_date, distribution):
         print(round(total.seconds/3600, 2))
         print()
 
+default_startdate = '19-06-01'
+default_enddate = '19-12-31'
 
-def main(store, report, first_date, last_date, distribution):
-    storeitems = json.load(open(store, 'r', encoding="utf-8"), object_hook=datetime_parser)
+# Varför göra detta?
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Extract information from timepolice data')
+    parser.add_argument("datastore", help="JSON file with timepolice data")
+    parser.add_argument("--startdate", help="First date to include, yy-mm-dd", default=default_startdate, action='store')
+    parser.add_argument("--enddate", help="Last date to include, yy-mm-dd", default=default_enddate, action='store')
+    parser.add_argument("--distribution", help="JSON file defining how tasks should be distributed", action='store')
+    parser.add_argument("--report", help="", action='store', default='timesheet')
+    args = parser.parse_args()
+    datastore = args.datastore
+    report = args.report
+    startdate = args.startdate
+    enddate = args.enddate
+    print('{}-{}'.format(startdate, enddate))
+    storeitems = json.load(open(datastore, 'r', encoding="utf-8"), object_hook=datetime_parser)
+
     if report == "timesheet":
+        distribution = args.distribution
         distributionitems = json.load(open(distribution, 'r', encoding="utf-8"),
                                       object_hook=datetime_parser)
-        timesheet(storeitems, first_date, last_date, distributionitems)
+        timesheet(storeitems, startdate, enddate, distributionitems)
 
-
-if __name__ == '__main__':
-    if len(sys.argv) == 6:
-        main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-    else:
-        print("{}".format(__doc__))
