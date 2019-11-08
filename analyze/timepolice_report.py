@@ -46,13 +46,10 @@ def get_distribution(distributions, start):
             break
     return dist
 
-def session_summary(session, distributions):
-    summary = dict()
-
+def append_session_summary(summary, session, distributions):
     for taskentry in session['taskentries']:
         name = taskentry['taskname']
         distribution = get_distribution(distributions, taskentry['start'])
-        # print(distribution)
         totaltime = taskentry['stop']-taskentry['start']
         found = False
         for origin in distribution:
@@ -63,24 +60,54 @@ def session_summary(session, distributions):
                 break
         if found == False:
             add_task(summary, name, totaltime)
-    return summary
+
+def print_summary(summary_text, last_date_included, summary):
+    totals = [s for s in summary.values()]
+
+    for task in summary:
+        print(task, round(summary[task].seconds/3600, 2))
+
+    if(len(totals) > 0):
+        totalseconds = functools.reduce(lambda x, y: x+y, totals).total_seconds()
+        (_,week,_) = last_date_included.isocalendar()
+        print("{} {} (week {}) ===> {}".format(summary_text, last_date_included, week, round(totalseconds/3600, 2)))
+        print()
+
+def period_done(old_session_created, current_session_created, period):
+    if(old_session_created==()):
+        return False
+    if(period=='daily'):
+        return True
+    elif(period=='weekly'):
+        (_,current_week,_) = current_session_created.isocalendar()
+        (_,old_week,_) = old_session_created.isocalendar()
+        if(current_week != old_week):
+            return True
+        else:
+            return False
+    elif(period=='monthly'):
+        if(current_session_created.month != old_session_created.month):
+            return True
+        else:
+            return False
 
 
-def timesheet(store, first_date, last_date, distribution, project):
+def timesheet(store, first_date, last_date, distribution, project, period):
     first = datetime.strptime(first_date, "%y-%m-%d").date().toordinal()
     last = datetime.strptime(last_date, "%y-%m-%d").date().toordinal()
     subset_kostnad = [s for s in store if session_between_dates(s, project, first, last)]
-
-    tasknames = set()
+    summary = dict()
+    old_session_created = ()
     for session in subset_kostnad:
-        summary = session_summary(session, distribution)
-        print(session['date_created'].date())
-        for task in summary:
-            print(task, round(summary[task].seconds/3600, 2))
-        totals = [s for s in summary.values()]
-        total = functools.reduce(lambda x, y: x+y, totals)
-        print(round(total.seconds/3600, 2))
-        print()
+        if(period_done(old_session_created, session['date_created'], period)):
+            print_summary("Last date included", old_session_created, summary)
+            summary = dict()
+        append_session_summary(summary, session, distribution)
+        old_session_created = session['date_created']
+    print_summary("Last date included", subset_kostnad[-1]['date_created'], summary)
+
+
+
 
 default_startdate = '19-06-01'
 default_enddate = '19-12-31'
@@ -94,12 +121,14 @@ if __name__ == '__main__':
     parser.add_argument("--distribution", help="JSON file defining how tasks should be distributed", action='store')
     parser.add_argument("--report", help="", action='store', default='timesheet')
     parser.add_argument("--project", help="Name of project to analyze", action='store', default='Kostnad')
+    parser.add_argument("--period", help="Periodicity for sums", action='store', choices=['daily','weekly','monthly'], default='weekly')
     args = parser.parse_args()
     datastore = args.datastore
     report = args.report
     startdate = args.startdate
     enddate = args.enddate
     project = args.project
+    period = args.period
 
     storeitems = json.load(open(datastore, 'r', encoding="utf-8"), object_hook=datetime_parser)
 
@@ -107,5 +136,5 @@ if __name__ == '__main__':
         distribution = args.distribution
         distributionitems = json.load(open(distribution, 'r', encoding="utf-8"),
                                       object_hook=datetime_parser)
-        timesheet(storeitems, startdate, enddate, distributionitems, project)
+        timesheet(storeitems, startdate, enddate, distributionitems, project, period)
 
