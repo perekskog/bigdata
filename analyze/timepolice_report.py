@@ -65,7 +65,7 @@ def print_summary(summary_text, last_date_included, summary):
     totals = [s for s in summary.values()]
 
     for task in summary:
-        print(task, round(summary[task].seconds/3600, 2))
+        print(task, round(summary[task].total_seconds()/3600, 2))
 
     if(len(totals) > 0):
         totalseconds = functools.reduce(lambda x, y: x+y, totals).total_seconds()
