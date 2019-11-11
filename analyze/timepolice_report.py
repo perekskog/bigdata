@@ -133,6 +133,8 @@ if __name__ == '__main__':
     storeitems = json.load(open(datastore, 'r', encoding="utf-8"), object_hook=datetime_parser)
 
     if report == "timesheet":
+        distributionitems = []
+        if(args.distribution):
         distribution = args.distribution
         distributionitems = json.load(open(distribution, 'r', encoding="utf-8"),
                                       object_hook=datetime_parser)
