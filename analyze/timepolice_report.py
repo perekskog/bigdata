@@ -135,8 +135,8 @@ if __name__ == '__main__':
     if report == "timesheet":
         distributionitems = []
         if(args.distribution):
-        distribution = args.distribution
-        distributionitems = json.load(open(distribution, 'r', encoding="utf-8"),
+            distribution = args.distribution
+            distributionitems = json.load(open(distribution, 'r', encoding="utf-8"),
                                       object_hook=datetime_parser)
         timesheet(storeitems, startdate, enddate, distributionitems, project, period)
 
