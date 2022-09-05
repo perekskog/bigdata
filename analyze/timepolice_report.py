@@ -72,6 +72,9 @@ def print_summary(summary_text, last_date_included, summary):
         (_,week,_) = last_date_included.isocalendar()
         print("{} {} (week {}) ===> {}".format(summary_text, last_date_included, week, round(totalseconds/3600, 2)))
         print()
+        return totalseconds
+
+    return 0
 
 def period_done(old_session_created, current_session_created, period):
     if(old_session_created==()):
@@ -98,13 +101,19 @@ def timesheet(store, first_date, last_date, distribution, project, period):
     subset_kostnad = [s for s in store if session_between_dates(s, project, first, last)]
     summary = dict()
     old_session_created = ()
+    total_seconds = 0
     for session in subset_kostnad:
         if(period_done(old_session_created, session['date_created'], period)):
-            print_summary("Last date included", old_session_created, summary)
+            period_seconds = print_summary("Last date included", old_session_created, summary)
+            total_seconds = total_seconds + period_seconds
             summary = dict()
         append_session_summary(summary, session, distribution)
         old_session_created = session['date_created']
-    print_summary("Last date included", subset_kostnad[-1]['date_created'], summary)
+    period_seconds = print_summary("Last date included", subset_kostnad[-1]['date_created'], summary)
+    total_seconds = total_seconds + period_seconds
+    print("Total: {}".format(round(total_seconds/3600, 2)))
+    print()
+        
 
 
 
