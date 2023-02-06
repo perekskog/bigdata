@@ -172,6 +172,8 @@ def get_movie_from_row(row):
     productionyear = 0
     audio = ""
     subtitle = ""
+    category = []
+    comments = ""
 
     print("basename={}".format(basename))
 
@@ -235,7 +237,7 @@ def get_movie_from_row(row):
     movie = {"title": title, "media-location": media_location,
              "media-type": "file", "media-format": filetype,
              "audio": audio, "subtitle": subtitle,
-             "production-year": productionyear}
+             "production-year": productionyear, "category": category, "comments": comments}
 
     return movie
 
