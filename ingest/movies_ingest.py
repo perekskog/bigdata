@@ -170,8 +170,8 @@ def get_movie_from_row(row):
     media_location = "ms"
     copy = False
     productionyear = 0
-    audio = ""
-    subtitle = ""
+    audio = "?"
+    subtitle = "?"
     category = []
     comments = ""
 
